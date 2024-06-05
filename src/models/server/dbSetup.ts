@@ -10,10 +10,6 @@ export default async function getOrCreateDB() {
     try {
         await databases.get(db); // Check if database exists
         console.log("Database Connected");
-
-        // await databases.delete(db); // Delete database if it exists
-        // console.log("Database Deleted");
-        // throw new Error("Database Deleted");
     } catch (error) {
         try {
             await databases.create(db, db); // Create database if it doesn't exist

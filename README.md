@@ -23,4 +23,4 @@ We will be using the following databases:
 
 ## Database and Collection Creation
 
-`src/models/server/db.ts` contains the code to create the databases and collections if doesn't exists which is called in `src/middleware` because this file will be executed on every request.
+`src/models/server/dbSetup.ts` and `src/models/server/storageSetup.ts` contains the code to create the databases, collections and storage bucket if doesn't exists which is called in `src/middleware` because this file will be executed on every request.

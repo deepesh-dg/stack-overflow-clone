@@ -1,5 +1,5 @@
 import env from "@/app/env";
-import { Client, Databases } from "node-appwrite";
+import { Client, Databases, Storage } from "node-appwrite";
 
 // Init Appwrite Server SDK
 const client = new Client();
@@ -9,5 +9,6 @@ client
     .setKey(env.appwrite.apiKey);
 
 const databases = new Databases(client);
+const storage = new Storage(client);
 
-export { client, databases };
+export { client, databases, storage };
