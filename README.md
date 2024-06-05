@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Stack Overflow Clone
+
+A clone of Stack Overflow using [Next.js](https://nextjs.org/) and [Appwrite](https://appwrite.io/).
 
 ## Getting Started
 
-First, run the development server:
+1. `npx create-next-app stack-overflow-clone`
+2. configure linting with prettier and eslint
+3. `npm install appwrite@15.0.0 node-appwrite@13.0.0`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Since we are using Appwrite, we need to create a new project in the Appwrite console and get the API key which will eventually be used to create databases and collections.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database and Collection Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+We will be using the following databases:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+-   `main-stackoverflow`: This is the main database that will contain all the questions, answers, comments, and tags.
+-   `questions`: This collection will contain all the questions.
+-   `answers`: This collection will contain all the answers.
+-   `comments`: This collection will contain all the comments.
+-   `upvotes`: This collection will contain all the upvotes.
+-   `downvotes`: This collection will contain all the downvotes.
 
-## Learn More
+## Database and Collection Creation
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`src/models/server/db.ts` contains the code to create the databases and collections if doesn't exists which is called in `src/middleware` because this file will be executed on every request.
