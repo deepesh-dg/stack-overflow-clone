@@ -18,8 +18,7 @@ We will be using the following databases:
 -   `questions`: This collection will contain all the questions.
 -   `answers`: This collection will contain all the answers.
 -   `comments`: This collection will contain all the comments.
--   `upvotes`: This collection will contain all the upvotes.
--   `downvotes`: This collection will contain all the downvotes.
+-   `votes`: This collection will contain all the upvotes and downvotes.
 
 ## Database and Collection Creation
 

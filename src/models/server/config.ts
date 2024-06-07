@@ -1,5 +1,5 @@
 import env from "@/app/env";
-import { Client, Databases, Storage } from "node-appwrite";
+import { Avatars, Client, Databases, Storage, Users } from "node-appwrite";
 
 // Init Appwrite Server SDK
 const client = new Client();
@@ -10,5 +10,7 @@ client
 
 const databases = new Databases(client);
 const storage = new Storage(client);
+const users = new Users(client);
+const avatars = new Avatars(client);
 
-export { client, databases, storage };
+export { client, databases, storage, users, avatars };

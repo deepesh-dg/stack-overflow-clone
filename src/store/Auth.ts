@@ -2,12 +2,16 @@ import { AppwriteException, ID, Models } from "appwrite";
 import { account } from "@/models/client/config";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
+
+export interface UserPrefs {
+    reputation: number;
+}
 
 interface IAuthStore {
     session: Models.Session | null;
     jwt: string | null;
-    user: Models.User<{}> | null;
+    user: Models.User<UserPrefs> | null;
     hydrated: boolean;
 
     setHydrated(): void;
@@ -50,7 +54,7 @@ export const useAuthStore = create<IAuthStore>()(
                 try {
                     const session = await account.createEmailPasswordSession(email, password);
                     const [user, { jwt }] = await Promise.all([
-                        account.get<{}>(),
+                        account.get<UserPrefs>(),
                         account.createJWT(),
                     ]);
 
@@ -66,8 +70,8 @@ export const useAuthStore = create<IAuthStore>()(
             },
             async createAccount(name: string, email: string, password: string) {
                 try {
-                    await account.create<{}>(ID.unique(), email, password, name);
-                    // await account.updatePrefs({});
+                    await account.create<UserPrefs>(ID.unique(), email, password, name);
+                    await account.updatePrefs<UserPrefs>({ reputation: 1 });
 
                     return { success: true };
                 } catch (error) {

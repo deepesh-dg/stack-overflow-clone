@@ -2,9 +2,8 @@ import { db } from "../name";
 import createAnswerCollection from "./answer.collection";
 import createCommentCollection from "./comment.collection";
 import { databases } from "./config";
-import createDownvoteCollection from "./downvote.collection";
 import createQuestionCollection from "./question.collection";
-import createUpvoteCollection from "./upvote.collection";
+import createVoteCollection from "./vote.collection";
 
 export default async function getOrCreateDB() {
     try {
@@ -20,8 +19,7 @@ export default async function getOrCreateDB() {
                 createQuestionCollection(),
                 createAnswerCollection(),
                 createCommentCollection(),
-                createUpvoteCollection(),
-                createDownvoteCollection(),
+                createVoteCollection(),
             ]);
             console.log("Collections Created");
 

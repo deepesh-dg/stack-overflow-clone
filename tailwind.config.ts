@@ -36,8 +36,14 @@ const config: Config = {
                 slide: "slide var(--speed) ease-in-out infinite alternate",
                 meteor: "meteor 5s linear infinite",
                 shimmer: "shimmer 2s linear infinite",
+                "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
             },
             keyframes: {
+                "border-beam": {
+                    "100%": {
+                        "offset-distance": "100%",
+                    },
+                },
                 grid: {
                     "0%": { transform: "translateY(-50%)" },
                     "100%": { transform: "translateY(0)" },
