@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const session = useAuthStore(store => store.session);
+    const { session, hydrated } = useAuthStore();
     const router = useRouter();
 
     React.useEffect(() => {
-        if (!session) {
+        if (!session && hydrated) {
             router.push("/login");
         }
-    }, [session, router]);
+    }, [session, router, hydrated]);
 
     if (!session) {
         return null;

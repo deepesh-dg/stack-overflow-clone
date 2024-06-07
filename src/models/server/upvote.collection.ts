@@ -6,6 +6,7 @@ export default async function createUpvoteCollection() {
     // Creating Collection
     await databases.createCollection(db, upvoteCollection, upvoteCollection, [
         Permission.create("users"),
+        Permission.read("any"),
         Permission.read("users"),
         Permission.update("users"),
         Permission.delete("users"),

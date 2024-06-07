@@ -6,6 +6,7 @@ export default async function createQuestionCollection() {
     // Creating Collection
     await databases.createCollection(db, questionCollection, questionCollection, [
         Permission.create("users"),
+        Permission.read("any"),
         Permission.read("users"),
         Permission.update("users"),
         Permission.delete("users"),
@@ -32,15 +33,7 @@ export default async function createQuestionCollection() {
             undefined,
             true // array of strings
         ),
-        databases.createStringAttribute(
-            db,
-            questionCollection,
-            "attachmentIds",
-            50,
-            true, // required means can accept empty array
-            undefined,
-            true // array of bucket photo IDs
-        ),
+        databases.createStringAttribute(db, questionCollection, "attachmentId", 50, false),
     ]);
     console.log("Question Attributes Created");
 
