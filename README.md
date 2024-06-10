@@ -31,3 +31,13 @@ Authentication is handled by Appwrite which has been handled via zustand store i
 -   `src/app/(auth)/layout.tsx`: This is the layout for the auth pages.
 -   `src/app/(auth)/login/page.tsx`: This is the login page.
 -   `src/app/(auth)/register/page.tsx`: This is the register page.
+
+## User Reputation Algorithm
+
+The user reputation is calculated by the following rules:
+
+-   If the user has answered a question, the reputation of answerAuthor is increased by 1.
+-   If the user has upvoted a question, the reputation of questionAuthor is increased by 1.
+-   If the user has downvoted a question, the reputation of questionAuthor is decreased by 1.
+-   If the user has upvoted an answer, the reputation of answerAuthor is increased by 1.
+-   If the user has downvoted an answer, the reputation of answerAuthor is decreased by 1.

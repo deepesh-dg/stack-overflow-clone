@@ -23,7 +23,7 @@ const VoteButtons = ({
     className?: string;
 }) => {
     const [votedDocument, setVotedDocument] = React.useState<Models.Document | null>(); // undefined means not fetched yet
-    const [netVoteCount, setNetVoteCount] = React.useState<number>(upvotes.total - downvotes.total);
+    const [voteResult, setVoteResult] = React.useState<number>(upvotes.total - downvotes.total);
 
     const { user } = useAuthStore();
     const router = useRouter();
@@ -47,36 +47,22 @@ const VoteButtons = ({
         if (votedDocument === undefined) return;
 
         try {
-            if (!votedDocument) {
-                const doc = await databases.createDocument(db, voteCollection, ID.unique(), {
+            const response = await fetch(`/api/vote`, {
+                method: "POST",
+                body: JSON.stringify({
+                    votedById: user.$id,
+                    voteStatus: "upvoted",
                     type,
                     typeId: id,
-                    voteStatus: "upvoted",
-                    votedById: user.$id,
-                });
+                }),
+            });
 
-                setVotedDocument(() => doc);
-                setNetVoteCount(prev => prev + 1);
+            const data = await response.json();
 
-                return;
-            }
+            if (!response.ok) throw data;
 
-            if (votedDocument.voteStatus === "upvoted") {
-                await databases.deleteDocument(db, voteCollection, votedDocument.$id);
-                setVotedDocument(() => null);
-                setNetVoteCount(prev => prev - 1);
-                return;
-            }
-
-            if (votedDocument.voteStatus === "downvoted") {
-                const doc = await databases.updateDocument(db, voteCollection, votedDocument.$id, {
-                    voteStatus: "upvoted",
-                });
-
-                setVotedDocument(() => doc);
-                setNetVoteCount(prev => prev + 2); // +1 for upvote and +1 for remove downvote
-                return;
-            }
+            setVoteResult(() => data.data.voteResult);
+            setVotedDocument(() => data.data.document);
         } catch (error: any) {
             window.alert(error?.message || "Something went wrong");
         }
@@ -88,36 +74,22 @@ const VoteButtons = ({
         if (votedDocument === undefined) return;
 
         try {
-            if (!votedDocument) {
-                const doc = await databases.createDocument(db, voteCollection, ID.unique(), {
+            const response = await fetch(`/api/vote`, {
+                method: "POST",
+                body: JSON.stringify({
+                    votedById: user.$id,
+                    voteStatus: "downvoted",
                     type,
                     typeId: id,
-                    voteStatus: "downvoted",
-                    votedById: user.$id,
-                });
+                }),
+            });
 
-                setVotedDocument(() => doc);
-                setNetVoteCount(prev => prev - 1);
+            const data = await response.json();
 
-                return;
-            }
+            if (!response.ok) throw data;
 
-            if (votedDocument.voteStatus === "downvoted") {
-                await databases.deleteDocument(db, voteCollection, votedDocument.$id);
-                setVotedDocument(() => null);
-                setNetVoteCount(prev => prev + 1);
-                return;
-            }
-
-            if (votedDocument.voteStatus === "upvoted") {
-                const doc = await databases.updateDocument(db, voteCollection, votedDocument.$id, {
-                    voteStatus: "downvoted",
-                });
-
-                setVotedDocument(() => doc);
-                setNetVoteCount(prev => prev - 2); // -1 for downvote and -1 for remove upvote
-                return;
-            }
+            setVoteResult(() => data.data.voteResult);
+            setVotedDocument(() => data.data.document);
         } catch (error: any) {
             window.alert(error?.message || "Something went wrong");
         }
@@ -136,7 +108,7 @@ const VoteButtons = ({
             >
                 <IconCaretUpFilled />
             </button>
-            <span>{netVoteCount}</span>
+            <span>{voteResult}</span>
             <button
                 className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border p-1 duration-200 hover:bg-white/10",

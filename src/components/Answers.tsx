@@ -28,18 +28,25 @@ const Answers = ({
         if (!newAnswer || !user) return;
 
         try {
-            const response = await databases.createDocument(db, answerCollection, ID.unique(), {
-                content: newAnswer,
-                authorId: user.$id,
-                questionId: questionId,
+            const response = await fetch("/api/answer", {
+                method: "POST",
+                body: JSON.stringify({
+                    questionId: questionId,
+                    answer: newAnswer,
+                    authorId: user.$id,
+                }),
             });
+
+            const data = await response.json();
+
+            if (!response.ok) throw data;
 
             setNewAnswer(() => "");
             setAnswers(prev => ({
                 total: prev.total + 1,
                 documents: [
                     {
-                        ...response,
+                        ...data,
                         author: user,
                         upvotesDocuments: { documents: [], total: 0 },
                         downvotesDocuments: { documents: [], total: 0 },
@@ -55,7 +62,16 @@ const Answers = ({
 
     const deleteAnswer = async (answerId: string) => {
         try {
-            await databases.deleteDocument(db, answerCollection, answerId);
+            const response = await fetch("/api/answer", {
+                method: "DELETE",
+                body: JSON.stringify({
+                    answerId: answerId,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw data;
 
             setAnswers(prev => ({
                 total: prev.total - 1,
