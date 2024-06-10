@@ -48,7 +48,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
         title: String(question?.title || ""),
         content: String(question?.content || ""),
         authorId: user?.$id,
-        tags: (question?.tags || []) as string[],
+        tags: new Set((question?.tags || []) as string[]),
         attachment: null as File | null,
     });
 
@@ -217,7 +217,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                             if (tag.length === 0) return;
                             setFormData(prev => ({
                                 ...prev,
-                                tags: [...prev.tags, tag],
+                                tags: new Set([...Array.from(prev.tags), tag]),
                             }));
                             setTag(() => "");
                         }}
@@ -227,7 +227,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                     </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    {formData.tags.map((tag, index) => (
+                    {Array.from(formData.tags).map((tag, index) => (
                         <div key={index} className="flex items-center gap-2">
                             <div className="group relative inline-block rounded-full bg-slate-800 p-px text-xs font-semibold leading-6 text-white no-underline shadow-2xl shadow-zinc-900">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -239,7 +239,9 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
                                         onClick={() => {
                                             setFormData(prev => ({
                                                 ...prev,
-                                                tags: prev.tags.filter(t => t !== tag),
+                                                tags: new Set(
+                                                    Array.from(prev.tags).filter(t => t !== tag)
+                                                ),
                                             }));
                                         }}
                                         type="button"

@@ -38,23 +38,24 @@ export default async function createQuestionCollection() {
     console.log("Question Attributes Created");
 
     // Creating Indexes
-    // await Promise.all([
-    //     databases.createIndex(
-    //         db,
-    //         questionCollection,
-    //         "search",
-    //         IndexType.Fulltext,
-    //         ["title", "content"],
-    //         ["asc", "desc"]
-    //     ),
-    //     databases.createIndex(
-    //         db,
-    //         questionCollection,
-    //         "author",
-    //         IndexType.Fulltext,
-    //         ["authorId"],
-    //         ["asc", "desc"]
-    //     ),
-    // ]);
+    // Not possible here, throwing error "attributes not found". have to create indexes manually in https://cloud.appwrite.io
+    /*await Promise.all([
+        databases.createIndex(
+            db,
+            questionCollection,
+            "title",
+            IndexType.Fulltext,
+            ["title"],
+            ["asc"]
+        ),
+        databases.createIndex(
+            db,
+            questionCollection,
+            "content",
+            IndexType.Fulltext,
+            ["content"],
+            ["asc"]
+        ),
+    ]); */
     // console.log("Question Indexes Created");
 }

@@ -180,7 +180,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                             {question.tags.map((tag: string) => (
                                 <Link
                                     key={tag}
-                                    href={`/questions/tagged/${tag}`}
+                                    href={`/questions?tag=${tag}`}
                                     className="inline-block rounded-lg bg-white/10 px-2 py-0.5 duration-200 hover:bg-white/20"
                                 >
                                     #{tag}

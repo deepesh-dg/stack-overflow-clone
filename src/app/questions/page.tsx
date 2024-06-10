@@ -6,16 +6,32 @@ import Link from "next/link";
 import ShimmerButton from "@/components/magicui/shimmer-button";
 import QuestionCard from "@/components/QuestionCard";
 import { UserPrefs } from "@/store/Auth";
-import Pagination from "@/components/pagination";
+import Pagination from "@/components/Pagination";
+import Search from "./Search";
 
-const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
+const Page = async ({
+    searchParams,
+}: {
+    searchParams: { page?: string; tag?: string; search?: string };
+}) => {
     searchParams.page ||= "1";
 
-    const questions = await databases.listDocuments(db, questionCollection, [
+    const queries = [
         Query.orderDesc("$createdAt"),
         Query.offset((+searchParams.page - 1) * 25),
         Query.limit(25),
-    ]);
+    ];
+
+    if (searchParams.tag) queries.push(Query.equal("tags", searchParams.tag));
+    if (searchParams.search)
+        queries.push(
+            Query.or([
+                Query.search("title", searchParams.search),
+                Query.search("content", searchParams.search),
+            ])
+        );
+
+    const questions = await databases.listDocuments(db, questionCollection, queries);
 
     questions.documents = await Promise.all(
         questions.documents.map(async ques => {
@@ -56,6 +72,9 @@ const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
                         </span>
                     </ShimmerButton>
                 </Link>
+            </div>
+            <div className="mb-4">
+                <Search />
             </div>
             <div className="mb-4">
                 <p>{questions.total} questions</p>
