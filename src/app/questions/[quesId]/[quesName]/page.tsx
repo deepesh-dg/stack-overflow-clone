@@ -11,8 +11,10 @@ import {
     voteCollection,
     questionCollection,
     commentCollection,
+    questionAttachmentBucket,
 } from "@/models/name";
 import { databases, users } from "@/models/server/config";
+import { storage } from "@/models/client/config";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
@@ -162,6 +164,18 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                     </div>
                     <div className="w-full overflow-auto">
                         <MarkdownPreview className="rounded-xl p-4" source={question.content} />
+                        <picture>
+                            <img
+                                src={
+                                    storage.getFilePreview(
+                                        questionAttachmentBucket,
+                                        question.attachmentId
+                                    ).href
+                                }
+                                alt={question.title}
+                                className="mt-3 rounded-lg"
+                            />
+                        </picture>
                         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
                             {question.tags.map((tag: string) => (
                                 <Link

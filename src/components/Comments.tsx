@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/Auth";
 import { cn } from "@/utils/cn";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
+import { IconTrash } from "@tabler/icons-react";
 import { ID, Models } from "appwrite";
 import Link from "next/link";
 import React from "react";
@@ -47,12 +48,25 @@ const Comments = ({
         }
     };
 
+    const deleteComment = async (commentId: string) => {
+        try {
+            await databases.deleteDocument(db, commentCollection, commentId);
+
+            setComments(prev => ({
+                total: prev.total - 1,
+                documents: prev.documents.filter(comment => comment.$id !== commentId),
+            }));
+        } catch (error: any) {
+            window.alert(error?.message || "Error deleting comment");
+        }
+    };
+
     return (
         <div className={cn("flex flex-col gap-2 pl-4", className)}>
             {comments.documents.map(comment => (
                 <React.Fragment key={comment.$id}>
                     <hr className="border-white/40" />
-                    <div key={comment.$id}>
+                    <div className="flex gap-2">
                         <p className="text-sm">
                             {comment.content} -{" "}
                             <Link
@@ -65,6 +79,14 @@ const Comments = ({
                                 {convertDateToRelativeTime(new Date(comment.$createdAt))}
                             </span>
                         </p>
+                        {user?.$id === comment.authorId ? (
+                            <button
+                                onClick={() => deleteComment(comment.$id)}
+                                className="shrink-0 text-red-500 hover:text-red-600"
+                            >
+                                <IconTrash className="h-4 w-4" />
+                            </button>
+                        ) : null}
                     </div>
                 </React.Fragment>
             ))}

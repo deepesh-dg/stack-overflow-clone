@@ -10,6 +10,7 @@ import RTE, { MarkdownPreview } from "./RTE";
 import Comments from "./Comments";
 import slugify from "@/utils/slugify";
 import Link from "next/link";
+import { IconTrash } from "@tabler/icons-react";
 
 const Answers = ({
     answers: _answers,
@@ -42,6 +43,7 @@ const Answers = ({
                         author: user,
                         upvotesDocuments: { documents: [], total: 0 },
                         downvotesDocuments: { documents: [], total: 0 },
+                        comments: { documents: [], total: 0 },
                     },
                     ...prev.documents,
                 ],
@@ -51,18 +53,40 @@ const Answers = ({
         }
     };
 
+    const deleteAnswer = async (answerId: string) => {
+        try {
+            await databases.deleteDocument(db, answerCollection, answerId);
+
+            setAnswers(prev => ({
+                total: prev.total - 1,
+                documents: prev.documents.filter(answer => answer.$id !== answerId),
+            }));
+        } catch (error: any) {
+            window.alert(error?.message || "Error deleting answer");
+        }
+    };
+
     return (
         <>
             <h2 className="mb-4 text-xl">{answers.total} Answers</h2>
             {answers.documents.map(answer => (
                 <div key={answer.$id} className="flex gap-4">
-                    <VoteButtons
-                        type="answer"
-                        id={answer.$id}
-                        className="shrink-0"
-                        upvotes={answer.upvotesDocuments}
-                        downvotes={answer.downvotesDocuments}
-                    />
+                    <div className="flex shrink-0 flex-col items-center gap-4">
+                        <VoteButtons
+                            type="answer"
+                            id={answer.$id}
+                            upvotes={answer.upvotesDocuments}
+                            downvotes={answer.downvotesDocuments}
+                        />
+                        {user?.$id === answer.authorId ? (
+                            <button
+                                className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500 p-1 text-red-500 duration-200 hover:bg-red-500/10"
+                                onClick={() => deleteAnswer(answer.$id)}
+                            >
+                                <IconTrash className="h-4 w-4" />
+                            </button>
+                        ) : null}
+                    </div>
                     <div className="w-full overflow-auto">
                         <MarkdownPreview className="rounded-xl p-4" source={answer.content} />
                         <div className="mt-4 flex items-center justify-end gap-1">
