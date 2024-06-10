@@ -37,9 +37,13 @@ const QuestionCard = ({ ques }: { ques: Models.Document }) => {
                 </Link>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
                     {ques.tags.map((tag: string) => (
-                        <p key={tag} className="rounded-lg bg-white/20 px-2 py-0.5">
+                        <Link
+                            key={tag}
+                            href={`/questions/tagged/${tag}`}
+                            className="inline-block rounded-lg bg-white/10 px-2 py-0.5 duration-200 hover:bg-white/20"
+                        >
                             #{tag}
-                        </p>
+                        </Link>
                     ))}
                     <div className="ml-auto flex items-center gap-1">
                         <picture>

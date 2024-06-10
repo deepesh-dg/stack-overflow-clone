@@ -71,7 +71,7 @@ export const useAuthStore = create<IAuthStore>()(
             async createAccount(name: string, email: string, password: string) {
                 try {
                     await account.create<UserPrefs>(ID.unique(), email, password, name);
-                    await account.updatePrefs<UserPrefs>({ reputation: 1 });
+                    await account.updatePrefs<UserPrefs>({ reputation: 0 });
 
                     return { success: true };
                 } catch (error) {

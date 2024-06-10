@@ -6,6 +6,7 @@ import Link from "next/link";
 import ShimmerButton from "@/components/magicui/shimmer-button";
 import QuestionCard from "@/components/QuestionCard";
 import { UserPrefs } from "@/store/Auth";
+import Pagination from "@/components/pagination";
 
 const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
     searchParams.page ||= "1";
@@ -59,11 +60,12 @@ const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
             <div className="mb-4">
                 <p>{questions.total} questions</p>
             </div>
-            <div className="max-w-3xl space-y-6">
+            <div className="mb-4 max-w-3xl space-y-6">
                 {questions.documents.map(ques => (
                     <QuestionCard key={ques.$id} ques={ques} />
                 ))}
             </div>
+            <Pagination total={questions.total} limit={25} />
         </div>
     );
 };
