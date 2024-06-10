@@ -16,9 +16,12 @@ import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
+import { IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { Query } from "node-appwrite";
 import React from "react";
+import DeleteQuestion from "./DeleteQuestion";
+import EditQuestion from "./EditQuestion";
 
 const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
     const [question, answers, upvotes, downvotes, comments] = await Promise.all([
@@ -142,13 +145,21 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                 </div>
                 <hr className="my-4 border-white/40" />
                 <div className="flex gap-4">
-                    <VoteButtons
-                        type="question"
-                        id={question.$id}
-                        className="shrink-0"
-                        upvotes={upvotes}
-                        downvotes={downvotes}
-                    />
+                    <div className="flex shrink-0 flex-col items-center gap-4">
+                        <VoteButtons
+                            type="question"
+                            id={question.$id}
+                            className="w-full"
+                            upvotes={upvotes}
+                            downvotes={downvotes}
+                        />
+                        <EditQuestion
+                            questionId={question.$id}
+                            questionTitle={question.title}
+                            authorId={question.authorId}
+                        />
+                        <DeleteQuestion questionId={question.$id} authorId={question.authorId} />
+                    </div>
                     <div className="w-full overflow-auto">
                         <MarkdownPreview className="rounded-xl p-4" source={question.content} />
                         <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
