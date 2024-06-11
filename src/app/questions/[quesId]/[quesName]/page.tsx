@@ -24,6 +24,7 @@ import { Query } from "node-appwrite";
 import React from "react";
 import DeleteQuestion from "./DeleteQuestion";
 import EditQuestion from "./EditQuestion";
+import { TracingBeam } from "@/components//ui/tracing-beam";
 
 const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
     const [question, answers, upvotes, downvotes, comments] = await Promise.all([
@@ -120,7 +121,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
     ]);
 
     return (
-        <>
+        <TracingBeam className="container pl-6">
             <Particles
                 className="fixed inset-0 h-full w-full"
                 quantity={500}
@@ -128,7 +129,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                 color="#ffffff"
                 refresh
             />
-            <div className="container relative mx-auto px-4 pb-20 pt-36">
+            <div className="relative mx-auto px-4 pb-20 pt-36">
                 <div className="flex">
                     <div className="w-full">
                         <h1 className="mb-1 text-3xl font-bold">{question.title}</h1>
@@ -221,7 +222,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                 </div>
                 <Answers answers={answers} questionId={question.$id} />
             </div>
-        </>
+        </TracingBeam>
     );
 };
 

@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { databases, storage } from "@/models/client/config";
 import { db, questionAttachmentBucket, questionCollection } from "@/models/name";
+import { Confetti } from "@/components/magicui/confetti";
 
 const LabelInputContainer = ({
     children,
@@ -55,6 +56,36 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
 
+    const loadConfetti = (timeInMS = 3000) => {
+        const end = Date.now() + timeInMS; // 3 seconds
+        const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+
+        const frame = () => {
+            if (Date.now() > end) return;
+
+            Confetti({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                startVelocity: 60,
+                origin: { x: 0, y: 0.5 },
+                colors: colors,
+            });
+            Confetti({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                startVelocity: 60,
+                origin: { x: 1, y: 0.5 },
+                colors: colors,
+            });
+
+            requestAnimationFrame(frame);
+        };
+
+        frame();
+    };
+
     const create = async () => {
         if (!formData.attachment) throw new Error("Please upload an image");
 
@@ -68,9 +99,11 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
             title: formData.title,
             content: formData.content,
             authorId: formData.authorId,
-            tags: formData.tags,
+            tags: Array.from(formData.tags),
             attachmentId: storageResponse.$id,
         });
+
+        loadConfetti();
 
         return response;
     };
@@ -96,7 +129,7 @@ const QuestionForm = ({ question }: { question?: Models.Document }) => {
             title: formData.title,
             content: formData.content,
             authorId: formData.authorId,
-            tags: formData.tags,
+            tags: Array.from(formData.tags),
             attachmentId: attachmentId,
         });
 
