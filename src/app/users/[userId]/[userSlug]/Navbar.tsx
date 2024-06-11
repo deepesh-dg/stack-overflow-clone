@@ -28,7 +28,7 @@ const Navbar = () => {
     ];
 
     return (
-        <ul className="flex w-40 shrink-0 flex-col gap-1">
+        <ul className="flex w-full shrink-0 gap-1 overflow-auto sm:w-40 sm:flex-col">
             {items.map(item => (
                 <li key={item.name}>
                     <Link
