@@ -28,7 +28,10 @@ import EditQuestion from "./EditQuestion";
 const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
     const [question, answers, upvotes, downvotes, comments] = await Promise.all([
         databases.getDocument(db, questionCollection, params.quesId),
-        databases.listDocuments(db, answerCollection, [Query.equal("questionId", params.quesId)]),
+        databases.listDocuments(db, answerCollection, [
+            Query.orderDesc("$createdAt"),
+            Query.equal("questionId", params.quesId),
+        ]),
         databases.listDocuments(db, voteCollection, [
             Query.equal("typeId", params.quesId),
             Query.equal("type", "question"),
