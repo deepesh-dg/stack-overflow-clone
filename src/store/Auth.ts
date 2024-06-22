@@ -58,6 +58,10 @@ export const useAuthStore = create<IAuthStore>()(
                         account.createJWT(),
                     ]);
 
+                    // set reputation of user if doesn not exist
+                    if (!user.prefs?.reputation)
+                        await account.updatePrefs<UserPrefs>({ reputation: 0 });
+
                     set({ session, user, jwt });
                     return { success: true };
                 } catch (error) {
@@ -71,7 +75,6 @@ export const useAuthStore = create<IAuthStore>()(
             async createAccount(name: string, email: string, password: string) {
                 try {
                     await account.create<UserPrefs>(ID.unique(), email, password, name);
-                    await account.updatePrefs<UserPrefs>({ reputation: 0 });
 
                     return { success: true };
                 } catch (error) {
